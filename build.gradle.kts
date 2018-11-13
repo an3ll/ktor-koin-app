@@ -1,10 +1,11 @@
 val appGroup: String by project
 val appVersion: String by project
 
-val ktorVersion: String by project
 val kotlinVersion: String by project
-val logbackVersion: String by project
+val ktorVersion: String by project
 val koinVersion: String by project
+val kMongoVersion: String by project
+val logbackVersion: String by project
 
 val main = "io.ktor.server.netty.EngineMain"
 
@@ -29,11 +30,15 @@ repositories {
 
 dependencies {
   implementation("org.jetbrains.kotlin", "kotlin-stdlib", kotlinVersion)
+
   implementation("io.ktor", "ktor-server-netty", ktorVersion)
   implementation("io.ktor", "ktor-server-core", ktorVersion)
   implementation("io.ktor", "ktor-jackson", ktorVersion)
-  implementation("ch.qos.logback", "logback-classic", logbackVersion)
   implementation("org.koin", "koin-ktor", koinVersion)
+  implementation("org.litote.kmongo", "kmongo", kMongoVersion)
+  implementation("org.litote.kmongo", "kmongo-id-jackson", kMongoVersion)
+
+  implementation("ch.qos.logback", "logback-classic", logbackVersion)
 
   testImplementation("io.ktor", "ktor-server-tests", ktorVersion)
 }

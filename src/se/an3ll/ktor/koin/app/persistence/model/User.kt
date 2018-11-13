@@ -1,19 +1,21 @@
 package se.an3ll.ktor.koin.app.persistence.model
 
-import se.an3ll.ktor.koin.app.persistence.Fetchable
+import org.litote.kmongo.Id
+import org.litote.kmongo.newId
+import se.an3ll.ktor.koin.app.persistence.Crudable
 
-data class User(
-  val id: String,
+class User(
+  val _id: Id<User> = newId(),
   val name: String,
   val expenses: List<Expense> = emptyList()
-) : Fetchable
+) : Crudable
 
 data class Expense(
-  val id: String,
+  val _id: Id<Expense> = newId(),
   val category: Category,
   val amount: Number)
 
 data class Category(
-  val id: String,
+  val _id: Id<Category> = newId(),
   val name: String,
   val parentId: String? = null)

@@ -15,7 +15,7 @@ class ApplicationTest {
     fun testRoot() {
         withTestApplication({ module() }) {
             handleRequest(HttpMethod.Get, "/users/1").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals(HttpStatusCode.NotFound, response.status())
                 assertNotNull(response.content)
             }
         }
