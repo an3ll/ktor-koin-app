@@ -1,21 +1,24 @@
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+val appGroup: String by project
+val appVersion: String by project
 
-val ktor_version: String by project
-val kotlin_version: String by project
-val logback_version: String by project
-val koin_version: String by project
+val ktorVersion: String by project
+val kotlinVersion: String by project
+val logbackVersion: String by project
+val koinVersion: String by project
+
+val main = "io.ktor.server.netty.EngineMain"
+
+group =  appGroup
+version = appVersion
 
 plugins {
   application
   kotlin("jvm") version "1.3.0"
+  id("com.github.johnrengelman.shadow") version "4.0.2"
 }
 
-group = "ktor-koin-app"
-version = "0.0.1"
-
 application {
-  mainClassName = "io.ktor.server.netty.EngineMain"
+  mainClassName = main
 }
 
 repositories {
@@ -25,14 +28,14 @@ repositories {
 }
 
 dependencies {
-  compile("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", kotlin_version)
-  compile("io.ktor", "ktor-server-netty", ktor_version)
-  compile("io.ktor", "ktor-server-core", ktor_version)
-  compile("io.ktor", "ktor-jackson", ktor_version)
-  compile("ch.qos.logback", "logback-classic", logback_version)
-  compile("org.koin", "koin-ktor", koin_version)
+  implementation("org.jetbrains.kotlin", "kotlin-stdlib", kotlinVersion)
+  implementation("io.ktor", "ktor-server-netty", ktorVersion)
+  implementation("io.ktor", "ktor-server-core", ktorVersion)
+  implementation("io.ktor", "ktor-jackson", ktorVersion)
+  implementation("ch.qos.logback", "logback-classic", logbackVersion)
+  implementation("org.koin", "koin-ktor", koinVersion)
 
-  testCompile("io.ktor:ktor-server-tests:$ktor_version")
+  testImplementation("io.ktor", "ktor-server-tests", ktorVersion)
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
