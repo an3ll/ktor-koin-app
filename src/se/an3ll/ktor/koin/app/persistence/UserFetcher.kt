@@ -1,7 +1,6 @@
-package se.an3ll.ktor.koin.app.persistence.user
+package se.an3ll.ktor.koin.app.persistence
 
-import se.an3ll.ktor.koin.app.persistence.Fetcher
-import se.an3ll.ktor.koin.app.persistence.Repository
+import se.an3ll.ktor.koin.app.persistence.model.User
 
 class UserFetcher(private val repository: Repository<User>) : Fetcher<User> {
 

@@ -18,7 +18,7 @@ import org.koin.ktor.ext.inject
 import org.koin.ktor.ext.installKoin
 import se.an3ll.ktor.koin.app.module.appModule
 import se.an3ll.ktor.koin.app.persistence.Fetcher
-import se.an3ll.ktor.koin.app.persistence.user.User
+import se.an3ll.ktor.koin.app.persistence.model.User
 
 fun main(args: Array<String>) {
   embeddedServer(Netty, commandLineEnvironment(args)).start()
