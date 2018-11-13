@@ -10,6 +10,7 @@ import io.ktor.features.DefaultHeaders
 import io.ktor.jackson.jackson
 import io.ktor.response.respond
 import io.ktor.routing.get
+import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.commandLineEnvironment
 import io.ktor.server.engine.embeddedServer
@@ -25,17 +26,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-
   installFeatures()
-
-  val userFetcher: Fetcher<User> by inject()
-
-  routing {
-    get("/users/{id}") {
-      val id: String = call.parameters["id"]!!
-      userFetcher.getById(id)?.let { user -> call.respond(message = user) }
-    }
-  }
+  setupRouter()
 }
 
 fun Application.installFeatures() {
@@ -49,6 +41,22 @@ fun Application.installFeatures() {
   install(ContentNegotiation) {
     jackson {
       enable(SerializationFeature.INDENT_OUTPUT)
+    }
+  }
+}
+
+fun Application.setupRouter() {
+
+  //injection via koin
+  val userFetcher: Fetcher<User> by inject()
+
+  //api
+  routing {
+    route("/users") {
+      get("/{id}") {
+        val id: String = call.parameters["id"]!!
+        userFetcher.getById(id)?.let { user -> call.respond(message = user) }
+      }
     }
   }
 }
