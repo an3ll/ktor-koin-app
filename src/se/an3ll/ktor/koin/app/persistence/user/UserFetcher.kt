@@ -5,7 +5,7 @@ import se.an3ll.ktor.koin.app.persistence.Repository
 
 class UserFetcher(private val repository: Repository<User>) : Fetcher<User> {
 
-  override fun getById(id: String) : User? {
+  override fun getById(id: String): User? {
     return repository.getById(id)
   }
 

@@ -21,34 +21,34 @@ import se.an3ll.ktor.koin.app.persistence.Fetcher
 import se.an3ll.ktor.koin.app.persistence.user.User
 
 fun main(args: Array<String>) {
-    embeddedServer(Netty, commandLineEnvironment(args)).start()
+  embeddedServer(Netty, commandLineEnvironment(args)).start()
 }
 
 fun Application.module() {
 
-    installFeatures()
+  installFeatures()
 
-    val userFetcher: Fetcher<User> by inject()
+  val userFetcher: Fetcher<User> by inject()
 
-    routing {
-        get("/users/{id}") {
-            val id: String = call.parameters["id"]!!
-            userFetcher.getById(id)?.let { user -> call.respond(message = user) }
-        }
+  routing {
+    get("/users/{id}") {
+      val id: String = call.parameters["id"]!!
+      userFetcher.getById(id)?.let { user -> call.respond(message = user) }
     }
+  }
 }
 
 fun Application.installFeatures() {
 
-    //Install dependency injection by koin
-    installKoin(listOf(appModule))
+  //Install dependency injection by koin
+  installKoin(listOf(appModule))
 
-    //Install other ktor features
-    install(DefaultHeaders)
-    install(CallLogging)
-    install(ContentNegotiation) {
-        jackson {
-            enable(SerializationFeature.INDENT_OUTPUT)
-        }
+  //Install other ktor features
+  install(DefaultHeaders)
+  install(CallLogging)
+  install(ContentNegotiation) {
+    jackson {
+      enable(SerializationFeature.INDENT_OUTPUT)
     }
+  }
 }
