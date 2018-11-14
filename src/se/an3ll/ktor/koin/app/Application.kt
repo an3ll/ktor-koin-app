@@ -24,7 +24,8 @@ import org.litote.kmongo.id.jackson.IdJacksonModule
 import se.an3ll.ktor.koin.app.module.appModule
 import se.an3ll.ktor.koin.app.persistence.model.Expense
 import se.an3ll.ktor.koin.app.persistence.model.User
-import se.an3ll.ktor.koin.app.service.crud.CrudService
+import se.an3ll.ktor.koin.app.service.crud.ChildCrudService
+import se.an3ll.ktor.koin.app.service.crud.RootCrudService
 
 fun main(args: Array<String>) {
   embeddedServer(Netty, commandLineEnvironment(args)).start()
@@ -38,8 +39,8 @@ fun Application.module() {
 fun Application.setupRouter() {
 
   //injection via koin
-  val userCrudService: CrudService<User> by inject("userCrud")
-  val expenseCrudService: CrudService<Expense> by inject("expenseCrud")
+  val userCrudService: RootCrudService<User> by inject()
+  val expenseCrudService: ChildCrudService<Expense> by inject()
 
   //api
   routing {
@@ -63,6 +64,11 @@ fun Application.setupRouter() {
         if (expense != null)
           call.respond(message = expense)
         else call.respond(message = "Expense not found", status = HttpStatusCode.NotFound)
+      }
+      post("/{id}") {
+        val id: String = call.parameters["id"]!!
+        val expense = call.receive<Expense>()
+        call.respond(expenseCrudService.create(id, expense))
       }
     }
   }

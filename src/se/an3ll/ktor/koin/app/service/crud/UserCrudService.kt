@@ -2,9 +2,9 @@ package se.an3ll.ktor.koin.app.service.crud
 
 import org.litote.kmongo.toId
 import se.an3ll.ktor.koin.app.persistence.model.User
-import se.an3ll.ktor.koin.app.persistence.repo.Repository
+import se.an3ll.ktor.koin.app.persistence.repo.RootRepository
 
-class UserCrudService(private val repository: Repository<User>) : CrudService<User> {
+class UserCrudService(private val repository: RootRepository<User>) : RootCrudService<User> {
 
   override fun create(objectToCreate: User) {
     repository.insert(objectToCreate)

@@ -4,38 +4,26 @@ import org.koin.dsl.module.module
 import org.litote.kmongo.KMongo
 import se.an3ll.ktor.koin.app.persistence.model.Expense
 import se.an3ll.ktor.koin.app.persistence.model.User
+import se.an3ll.ktor.koin.app.persistence.repo.ChildRepository
 import se.an3ll.ktor.koin.app.persistence.repo.ExpenseRepository
-import se.an3ll.ktor.koin.app.persistence.repo.Repository
+import se.an3ll.ktor.koin.app.persistence.repo.RootRepository
 import se.an3ll.ktor.koin.app.persistence.repo.UserRepository
-import se.an3ll.ktor.koin.app.service.crud.CrudService
+import se.an3ll.ktor.koin.app.service.crud.ChildCrudService
 import se.an3ll.ktor.koin.app.service.crud.ExpenseCrudService
+import se.an3ll.ktor.koin.app.service.crud.RootCrudService
 import se.an3ll.ktor.koin.app.service.crud.UserCrudService
-
-const val userCrud = "userCrud"
-const val userRepo = "userRepo"
-
-const val expenseCrud = "expenseCrud"
-const val expenseRepo = "entityRepo"
 
 val appModule = module {
 
   //Mongo Db
-  single{ KMongo.createClient() }
+  single { KMongo.createClient() }
 
   //Services
-  single<CrudService<User>>(userCrud) {
-    UserCrudService(
-      get(userRepo)
-    )
-  }
-  single<CrudService<Expense>>(expenseCrud) {
-    ExpenseCrudService(
-      get(expenseRepo)
-    )
-  }
+  single<RootCrudService<User>> { UserCrudService(get()) }
+  single<ChildCrudService<Expense>> { ExpenseCrudService(get()) }
 
   //Repositories
-  single<Repository<User>>(userRepo) { UserRepository(get()) }
-  single<Repository<Expense>>(expenseRepo) { ExpenseRepository(get()) }
+  single<RootRepository<User>> { UserRepository(get()) }
+  single<ChildRepository<User, Expense>> { ExpenseRepository(get()) }
 
 }

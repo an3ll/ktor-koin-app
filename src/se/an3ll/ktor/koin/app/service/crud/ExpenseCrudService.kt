@@ -2,12 +2,13 @@ package se.an3ll.ktor.koin.app.service.crud
 
 import org.litote.kmongo.toId
 import se.an3ll.ktor.koin.app.persistence.model.Expense
-import se.an3ll.ktor.koin.app.persistence.repo.Repository
+import se.an3ll.ktor.koin.app.persistence.model.User
+import se.an3ll.ktor.koin.app.persistence.repo.ChildRepository
 
-class ExpenseCrudService(private val repository: Repository<Expense>) : CrudService<Expense> {
+class ExpenseCrudService(private val repository: ChildRepository<User, Expense>) : ChildCrudService<Expense> {
 
-  override fun create(objectToCreate: Expense) {
-    repository.insert(objectToCreate)
+  override fun create(userId: String, objectToCreate: Expense) {
+    repository.insert(userId.toId(), objectToCreate)
   }
 
   override fun getById(id: String): Expense? {
