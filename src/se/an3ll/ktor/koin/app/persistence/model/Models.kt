@@ -3,6 +3,8 @@ package se.an3ll.ktor.koin.app.persistence.model
 import org.litote.kmongo.Id
 import org.litote.kmongo.newId
 
+interface Crudable
+
 data class User(
   val _id: Id<User> = newId(),
   val name: String,

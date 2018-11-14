@@ -10,7 +10,7 @@ import se.an3ll.ktor.koin.app.persistence.model.User
 class UserRepository(private val client: MongoClient) : RootRepository<User> {
 
   override fun getById(id: Id<User>): User? {
-    return context(client).findOne(User::_id eq id)
+    return context(client).findOne(User::_id eq ObjectId(id.toString()))
   }
 
   override fun insert(objectToInsert: User) {

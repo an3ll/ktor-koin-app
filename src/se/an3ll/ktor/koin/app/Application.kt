@@ -24,17 +24,8 @@ import org.litote.kmongo.id.jackson.IdJacksonModule
 import se.an3ll.ktor.koin.app.module.appModule
 import se.an3ll.ktor.koin.app.persistence.model.Expense
 import se.an3ll.ktor.koin.app.persistence.model.User
-import se.an3ll.ktor.koin.app.service.crud.ChildCrudService
-import se.an3ll.ktor.koin.app.service.crud.RootCrudService
-
-fun main(args: Array<String>) {
-  embeddedServer(Netty, commandLineEnvironment(args)).start()
-}
-
-fun Application.module() {
-  installFeatures()
-  setupRouter()
-}
+import se.an3ll.ktor.koin.app.service.ChildCrudService
+import se.an3ll.ktor.koin.app.service.RootCrudService
 
 fun Application.setupRouter() {
 
@@ -49,12 +40,19 @@ fun Application.setupRouter() {
         val user = call.receive<User>()
         call.respond(userCrudService.create(user))
       }
-      get("/{id}") {
-        val id: String = call.parameters["id"]!!
-        val user = userCrudService.getById(id)
-        if (user != null)
-          call.respond(message = user)
-        else call.respond(message = "User not found", status = HttpStatusCode.NotFound)
+      route("/{id}") {
+        get {
+          val id: String = call.parameters["id"]!!
+          val user = userCrudService.getById(id)
+          if (user != null)
+            call.respond(message = user)
+          else call.respond(message = "User not found", status = HttpStatusCode.NotFound)
+        }
+        post("/expenses") {
+          val id: String = call.parameters["id"]!!
+          val expense = call.receive<Expense>()
+          call.respond(expenseCrudService.create(id, expense))
+        }
       }
     }
     route("/expenses") {
@@ -64,11 +62,6 @@ fun Application.setupRouter() {
         if (expense != null)
           call.respond(message = expense)
         else call.respond(message = "Expense not found", status = HttpStatusCode.NotFound)
-      }
-      post("/{id}") {
-        val id: String = call.parameters["id"]!!
-        val expense = call.receive<Expense>()
-        call.respond(expenseCrudService.create(id, expense))
       }
     }
   }
@@ -88,4 +81,13 @@ fun Application.installFeatures() {
       registerModule(IdJacksonModule())
     }
   }
+}
+
+fun Application.module() {
+  installFeatures()
+  setupRouter()
+}
+
+fun main(args: Array<String>) {
+  embeddedServer(Netty, commandLineEnvironment(args)).start()
 }

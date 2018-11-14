@@ -4,6 +4,7 @@ import org.litote.kmongo.toId
 import se.an3ll.ktor.koin.app.persistence.model.Expense
 import se.an3ll.ktor.koin.app.persistence.model.User
 import se.an3ll.ktor.koin.app.persistence.repo.ChildRepository
+import se.an3ll.ktor.koin.app.service.ChildCrudService
 
 class ExpenseCrudService(private val repository: ChildRepository<User, Expense>) : ChildCrudService<Expense> {
 
