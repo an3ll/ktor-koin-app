@@ -22,8 +22,9 @@ import org.koin.ktor.ext.inject
 import org.koin.ktor.ext.installKoin
 import org.litote.kmongo.id.jackson.IdJacksonModule
 import se.an3ll.ktor.koin.app.module.appModule
-import se.an3ll.ktor.koin.app.persistence.CrudService
+import se.an3ll.ktor.koin.app.persistence.model.Expense
 import se.an3ll.ktor.koin.app.persistence.model.User
+import se.an3ll.ktor.koin.app.service.CrudService
 
 fun main(args: Array<String>) {
   embeddedServer(Netty, commandLineEnvironment(args)).start()
@@ -32,6 +33,34 @@ fun main(args: Array<String>) {
 fun Application.module() {
   installFeatures()
   setupRouter()
+}
+
+fun Application.setupRouter() {
+
+  //injection via koin
+  val userCrudService: CrudService<User> by inject("userCrud")
+  val expenseCrudService: CrudService<Expense> by inject("expenseCrud")
+
+  //api
+  routing {
+    route("/users") {
+      post {
+        val user = call.receive<User>()
+        call.respond(userCrudService.create(user))
+      }
+      get("/{id}") {
+        val id: String = call.parameters["id"]!!
+        val user = userCrudService.getById(id)
+        if (user != null) call.respond(message = user) else call.respond(message = "User not found", status = HttpStatusCode.NotFound)
+      }
+    }
+//    route("/expenses") {
+//      post {
+//        val entity = call.receive<Expense>()
+//        call.respond(userCrudService.create(e))
+//      }
+//    }
+  }
 }
 
 fun Application.installFeatures() {
@@ -46,27 +75,6 @@ fun Application.installFeatures() {
     jackson {
       enable(SerializationFeature.INDENT_OUTPUT)
       registerModule(IdJacksonModule())
-    }
-  }
-}
-
-fun Application.setupRouter() {
-
-  //injection via koin
-  val userCrudService: CrudService<User> by inject()
-
-  //api
-  routing {
-    route("/users") {
-      post {
-        val user = call.receive<User>()
-        call.respond(userCrudService.create(user))
-      }
-      get("/{id}") {
-        val id: String = call.parameters["id"]!!
-        val user = userCrudService.getById(id)
-        if (user != null) call.respond(message = user) else call.respond(message = "User not found", status = HttpStatusCode.NotFound)
-      }
     }
   }
 }

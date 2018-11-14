@@ -1,6 +1,7 @@
-package se.an3ll.ktor.koin.app.persistence
+package se.an3ll.ktor.koin.app.service
 
 import org.litote.kmongo.toId
+import se.an3ll.ktor.koin.app.persistence.repo.Repository
 import se.an3ll.ktor.koin.app.persistence.model.User
 
 class UserCrudService(private val repository: Repository<User>) : CrudService<User> {
