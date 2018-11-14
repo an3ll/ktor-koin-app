@@ -3,7 +3,7 @@ package se.an3ll.ktor.koin.app.persistence.model
 import org.litote.kmongo.Id
 import org.litote.kmongo.newId
 
-class User(
+data class User(
   val _id: Id<User> = newId(),
   val name: String,
   val expenses: List<Expense> = emptyList()

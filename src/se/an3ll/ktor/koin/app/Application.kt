@@ -24,7 +24,7 @@ import org.litote.kmongo.id.jackson.IdJacksonModule
 import se.an3ll.ktor.koin.app.module.appModule
 import se.an3ll.ktor.koin.app.persistence.model.Expense
 import se.an3ll.ktor.koin.app.persistence.model.User
-import se.an3ll.ktor.koin.app.service.CrudService
+import se.an3ll.ktor.koin.app.service.crud.CrudService
 
 fun main(args: Array<String>) {
   embeddedServer(Netty, commandLineEnvironment(args)).start()
@@ -51,15 +51,20 @@ fun Application.setupRouter() {
       get("/{id}") {
         val id: String = call.parameters["id"]!!
         val user = userCrudService.getById(id)
-        if (user != null) call.respond(message = user) else call.respond(message = "User not found", status = HttpStatusCode.NotFound)
+        if (user != null)
+          call.respond(message = user)
+        else call.respond(message = "User not found", status = HttpStatusCode.NotFound)
       }
     }
-//    route("/expenses") {
-//      post {
-//        val entity = call.receive<Expense>()
-//        call.respond(userCrudService.create(e))
-//      }
-//    }
+    route("/expenses") {
+      get("/{id}") {
+        val id: String = call.parameters["id"]!!
+        val expense = expenseCrudService.getById(id)
+        if (expense != null)
+          call.respond(message = expense)
+        else call.respond(message = "Expense not found", status = HttpStatusCode.NotFound)
+      }
+    }
   }
 }
 

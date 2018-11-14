@@ -1,4 +1,4 @@
-package se.an3ll.ktor.koin.app.service
+package se.an3ll.ktor.koin.app.service.crud
 
 import org.litote.kmongo.toId
 import se.an3ll.ktor.koin.app.persistence.model.Expense

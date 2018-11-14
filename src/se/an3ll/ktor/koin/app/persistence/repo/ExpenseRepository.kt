@@ -3,17 +3,17 @@ package se.an3ll.ktor.koin.app.persistence.repo
 import com.mongodb.MongoClient
 import org.bson.types.ObjectId
 import org.litote.kmongo.Id
-import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
 import se.an3ll.ktor.koin.app.persistence.model.Expense
 
 class ExpenseRepository(private val client: MongoClient) : Repository<Expense> {
   override fun insert(objectToInsert: Expense) {
-    context(client).insertOne(objectToInsert)
+//    context(client).insertOne(objectToInsert)
   }
 
   override fun getById(id: Id<Expense>): Expense? {
-    return context(client).findOne(Expense::_id eq id)
+    val user = context(client).findOne("{'expenses.amount' : 78.99}")
+    return user?.expenses?.find { it._id == id }
   }
 
   override fun update(objectToUpdate: Expense) {
